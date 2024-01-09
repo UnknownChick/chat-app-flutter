@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class AuthScreen extends StatefulWidget {
-  const AuthScreen({Key? key}) : super(key: key);
+class AuthScreen extends StatefulWidget { // permet de créer un état pour la page
+  const AuthScreen({Key? key}) : super(key: key); // permet de créer une clé pour la page
 
   @override
   State<StatefulWidget> createState() {
@@ -10,9 +10,11 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  var _isLogin = true; // permet de créer une variable pour le chargement
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold( // permet de créer une page
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: Center(
         child: SingleChildScrollView(
@@ -51,6 +53,28 @@ class _AuthScreenState extends State<AuthScreen> {
                               labelText: 'Mot de passe',
                             ),
                             obscureText: true, // permet de cacher le mot de passe
+                          ),
+                          const SizedBox(
+                            height: 12
+                          ),
+                          ElevatedButton( // permet de créer un bouton
+                            onPressed: () {
+
+                            },
+                            style: ElevatedButton.styleFrom( // permet de modifier le style du bouton
+                              backgroundColor: Theme.of(context).colorScheme.primaryContainer, // permet de modifier la couleur du texte
+                            ),
+                            child: Text(_isLogin ? 'Connexion' : 'S\'inscrire'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _isLogin = !_isLogin; // permet de changer le texte du bouton
+                              });
+                            },
+                            child: Text(
+                              _isLogin ? 'Créer un compte' : 'J\'ai déjà un compte',
+                            ),
                           ),
                         ],
                       ),
