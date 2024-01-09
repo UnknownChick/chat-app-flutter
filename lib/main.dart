@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:chat_app/screens/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // permet de s'assurer que les widgets sont initialisés
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(); // permet de s'assurer que les widgets sont initialisés
   await Firebase.initializeApp( // permet d'initialiser Firebase
     options: DefaultFirebaseOptions.currentPlatform,
   );
