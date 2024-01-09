@@ -10,7 +10,20 @@ class AuthScreen extends StatefulWidget { // permet de créer un état pour la p
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  final _form = GlobalKey<FormState>(); // permet de créer une clé pour le formulaire
   var _isLogin = true; // permet de créer une variable pour le chargement
+  var _enteredMail = ''; // permet de créer une variable pour le mail
+  var _enteredPassword = ''; // permet de créer une variable pour le mot de passe
+
+  void _submit() {
+    final isValid = _form.currentState!.validate(); // permet de vérifier si le formulaire est valide
+
+    if (isValid) {
+      _form.currentState!.save(); // permet de sauvegarder les données du formulaire
+      print(_enteredMail);
+      print(_enteredPassword);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +50,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Form(
+                      key: _form, // permet de lier la clé au formulaire
                       child: Column(
                         mainAxisSize: MainAxisSize.min, // permet de réduire la taille du formulaire
                         children: [
@@ -47,20 +61,36 @@ class _AuthScreenState extends State<AuthScreen> {
                             keyboardType: TextInputType.emailAddress, // permet de faire apparaitre le clavier adapté avec un @
                             autocorrect: false, // pas de correction automatique
                             textCapitalization: TextCapitalization.none, // pas de majuscule
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty || !value.contains('@')) { // permet de vérifier si le champ est vide ou si il contient un @
+                                return 'Veuillez entrer une adresse email valide';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _enteredMail = value!; // permet de sauvegarder la valeur du champ
+                            },
                           ),
                           TextFormField(
                             decoration: const InputDecoration(
                               labelText: 'Mot de passe',
                             ),
                             obscureText: true, // permet de cacher le mot de passe
+                            validator: (value) {
+                              if (value == null || value.trim().length < 6) { // permet de vérifier si le champ est vide ou si il contient moins de 6 caractères
+                                return 'Le mot de passe doit contenir au moins 6 caractères';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _enteredPassword = value!; // permet de sauvegarder la valeur du champ
+                            },
                           ),
                           const SizedBox(
                             height: 12
                           ),
                           ElevatedButton( // permet de créer un bouton
-                            onPressed: () {
-
-                            },
+                            onPressed: _submit,
                             style: ElevatedButton.styleFrom( // permet de modifier le style du bouton
                               backgroundColor: Theme.of(context).colorScheme.primaryContainer, // permet de modifier la couleur du texte
                             ),
@@ -68,7 +98,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           ),
                           TextButton(
                             onPressed: () {
-                              setState(() {
+                              setState(() { // permet de modifier l'état de la page
                                 _isLogin = !_isLogin; // permet de changer le texte du bouton
                               });
                             },
