@@ -27,6 +27,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
     _form.currentState!.save(); // permet de sauvegarder les données du formulaire
 
+  
     try {
       if(_isLogin) {
         final UserCredentials = await _firebase.signInWithEmailAndPassword(
