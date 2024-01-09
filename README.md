@@ -1,16 +1,29 @@
-# chat_app
+# Nom du Projet
 
-A new Flutter project.
+Ce projet est développé en utilisant le framework Flutter.
 
-## Getting Started
+## Prérequis
 
-This project is a starting point for a Flutter application.
+Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur votre machine :
 
-A few resources to get you started if this is your first Flutter project:
+- Flutter SDK : [Instructions d'installation](https://docs.flutter.dev/get-started/install)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Installation
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Exécutez la commande suivante pour télécharger les dépendances :
+
+```bash
+flutter pub get
+```
+
+2. Connectez votre appareil ou lancez un émulateur Android/iOS.
+
+3. Exécutez l'application :
+
+ ```bash
+flutter run
+```
+
+## Liens
+
+- Dépendances : [Listes](https://pub.dev/)
