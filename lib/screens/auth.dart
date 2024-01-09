@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+final _firebase = FirebaseAuth.instance; // permet de créer une instance de Firebase
 
 class AuthScreen extends StatefulWidget { // permet de créer un état pour la page
   const AuthScreen({Key? key}) : super(key: key); // permet de créer une clé pour la page
@@ -15,13 +18,38 @@ class _AuthScreenState extends State<AuthScreen> {
   var _enteredMail = ''; // permet de créer une variable pour le mail
   var _enteredPassword = ''; // permet de créer une variable pour le mot de passe
 
-  void _submit() {
+  void _submit() async{
     final isValid = _form.currentState!.validate(); // permet de vérifier si le formulaire est valide
 
-    if (isValid) {
-      _form.currentState!.save(); // permet de sauvegarder les données du formulaire
-      print(_enteredMail);
-      print(_enteredPassword);
+    if (!isValid) { // permet de vérifier si le formulaire n'est pas valide
+      return;
+    }
+
+    _form.currentState!.save(); // permet de sauvegarder les données du formulaire
+
+    try {
+      if(_isLogin) {
+        final UserCredentials = await _firebase.signInWithEmailAndPassword(
+          email: _enteredMail,
+          password: _enteredMail
+        );
+      } else {
+        final userCredentials = await _firebase.createUserWithEmailAndPassword(
+          email: _enteredMail,
+          password: _enteredPassword,
+        );
+        print(userCredentials);
+      }
+    } on FirebaseAuthException catch (error) {
+      if(error.code == 'email-already-in-use') {
+        
+      }
+      ScaffoldMessenger.of(context).clearSnackBars(); // permet de supprimer les messages d'erreur
+      ScaffoldMessenger.of(context).showSnackBar( // permet d'afficher un message d'erreur
+        SnackBar(
+          content: Text(error.message ?? 'Une erreur est survenue'),
+        ),
+      );
     }
   }
 
