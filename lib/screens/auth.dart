@@ -27,13 +27,13 @@ class _AuthScreenState extends State<AuthScreen> {
 
     _form.currentState!.save(); // permet de sauvegarder les données du formulaire
 
-  
     try {
-      if(_isLogin) {
-        final UserCredentials = await _firebase.signInWithEmailAndPassword(
+      if (_isLogin) {
+        final userCredentials = await _firebase.signInWithEmailAndPassword(
           email: _enteredMail,
-          password: _enteredMail
+          password: _enteredPassword
         );
+        print(userCredentials);
       } else {
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
           email: _enteredMail,
@@ -42,7 +42,7 @@ class _AuthScreenState extends State<AuthScreen> {
         print(userCredentials);
       }
     } on FirebaseAuthException catch (error) {
-      if(error.code == 'email-already-in-use') {
+      if (error.code == 'email-already-in-use') {
         
       }
       ScaffoldMessenger.of(context).clearSnackBars(); // permet de supprimer les messages d'erreur
