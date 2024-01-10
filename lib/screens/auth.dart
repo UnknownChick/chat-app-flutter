@@ -21,6 +21,7 @@ class _AuthScreenState extends State<AuthScreen> {
   var _enteredMail = ''; // permet de créer une variable pour le mail
   var _enteredPassword = ''; // permet de créer une variable pour le mot de passe
   File? _selectedImage; // permet de créer une variable pour l'image
+  var _isAuthenticating = false; // permet de créer une variable pour le chargement
 
   void _submit() async{
     final isValid = _form.currentState!.validate(); // permet de vérifier si le formulaire est valide
@@ -29,10 +30,12 @@ class _AuthScreenState extends State<AuthScreen> {
       return;
     }
 
-
     _form.currentState!.save(); // permet de sauvegarder les données du formulaire
 
     try {
+      setState(() {
+        _isAuthenticating = true;
+      });
       if (_isLogin) {
         final userCredentials = await _firebase.signInWithEmailAndPassword(
           email: _enteredMail,
@@ -59,6 +62,9 @@ class _AuthScreenState extends State<AuthScreen> {
           content: Text(error.message ?? 'Une erreur est survenue'),
         ),
       );
+      setState(() {
+        _isAuthenticating = false;
+      });
     }
   }
 
@@ -131,23 +137,27 @@ class _AuthScreenState extends State<AuthScreen> {
                           const SizedBox(
                             height: 12
                           ),
-                          ElevatedButton( // permet de créer un bouton
-                            onPressed: _submit,
-                            style: ElevatedButton.styleFrom( // permet de modifier le style du bouton
-                              backgroundColor: Theme.of(context).colorScheme.primaryContainer, // permet de modifier la couleur du texte
+                          if (_isAuthenticating) // permet de vérifier si le chargement est terminé
+                            const CircularProgressIndicator(), // permet de créer un cercle de chargement
+                          if (!_isAuthenticating) // permet de vérifier si le chargement est terminé
+                            ElevatedButton( // permet de créer un bouton
+                              onPressed: _submit,
+                              style: ElevatedButton.styleFrom( // permet de modifier le style du bouton
+                                backgroundColor: Theme.of(context).colorScheme.primaryContainer, // permet de modifier la couleur du texte
+                              ),
+                              child: Text(_isLogin ? 'Connexion' : 'S\'inscrire'),
                             ),
-                            child: Text(_isLogin ? 'Connexion' : 'S\'inscrire'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              setState(() { // permet de modifier l'état de la page
-                                _isLogin = !_isLogin; // permet de changer le texte du bouton
-                              });
-                            },
-                            child: Text(
-                              _isLogin ? 'Créer un compte' : 'J\'ai déjà un compte',
+                          if (!_isAuthenticating) // permet de vérifier si le chargement est terminé
+                            TextButton(
+                              onPressed: () {
+                                setState(() { // permet de modifier l'état de la page
+                                  _isLogin = !_isLogin; // permet de changer le texte du bouton
+                                });
+                              },
+                              child: Text(
+                                _isLogin ? 'Créer un compte' : 'J\'ai déjà un compte',
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),
