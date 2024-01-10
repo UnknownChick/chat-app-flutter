@@ -1,4 +1,4 @@
-# Nom du Projet
+# Flutter chat app
 
 Ce projet est développé en utilisant le framework Flutter.
 
