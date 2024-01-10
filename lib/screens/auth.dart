@@ -21,6 +21,7 @@ class _AuthScreenState extends State<AuthScreen> {
   var _isLogin = true; // permet de créer une variable pour le chargement
   var _enteredMail = ''; // permet de créer une variable pour le mail
   var _enteredPassword = ''; // permet de créer une variable pour le mot de passe
+  var _enteredUsername = ''; // permet de créer une variable pour le pseudo
   File? _selectedImage; // permet de créer une variable pour l'image
   var _isAuthenticating = false; // permet de créer une variable pour le chargement
 
@@ -54,7 +55,7 @@ class _AuthScreenState extends State<AuthScreen> {
         String resolvedImageUrl = await imageUrl;
         
         await FirebaseFirestore.instance.collection('users').doc(userCredentials.user!.uid).set({ // permet de créer un dossier pour l'image
-          'username': 'to',
+          'username': _enteredUsername,
           'email': _enteredMail,
           'image_url': resolvedImageUrl,
         });
@@ -109,6 +110,22 @@ class _AuthScreenState extends State<AuthScreen> {
                               _selectedImage = pickedImage; // permet de créer une variable pour l'image
                             },
                           ),
+                          if (!_isLogin)
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                labelText: 'Pseudo',
+                              ),
+                              enableSuggestions: false, // pas de suggestion
+                              validator: (value) {
+                                if (value == null || value.isEmpty || value.trim().length < 4) { // permet de vérifier si le champ est vide ou si il contient moins de 4 caractères
+                                  return 'Le pseudo doit contenir au moins 4 caractères';
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                _enteredUsername = value!; // permet de sauvegarder la valeur du champ
+                              },
+                            ),
                           TextFormField(
                             decoration: const InputDecoration(
                               labelText: 'Email',
