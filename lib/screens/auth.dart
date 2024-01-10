@@ -1,5 +1,8 @@
+import 'package:chat_app/widgets/user_image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io';
 
 final _firebase = FirebaseAuth.instance; // permet de créer une instance de Firebase
 
@@ -17,13 +20,15 @@ class _AuthScreenState extends State<AuthScreen> {
   var _isLogin = true; // permet de créer une variable pour le chargement
   var _enteredMail = ''; // permet de créer une variable pour le mail
   var _enteredPassword = ''; // permet de créer une variable pour le mot de passe
+  File? _selectedImage; // permet de créer une variable pour l'image
 
   void _submit() async{
     final isValid = _form.currentState!.validate(); // permet de vérifier si le formulaire est valide
 
-    if (!isValid) { // permet de vérifier si le formulaire n'est pas valide
+    if (!isValid || !_isLogin && _selectedImage == null) { // permet de vérifier si le formulaire n'est pas valide
       return;
     }
+
 
     _form.currentState!.save(); // permet de sauvegarder les données du formulaire
 
@@ -38,6 +43,11 @@ class _AuthScreenState extends State<AuthScreen> {
           email: _enteredMail,
           password: _enteredPassword,
         );
+        final storageRef = FirebaseStorage.instance.ref().child('user_images').child('${userCredentials.user!.uid}.jpg'); // permet de créer un dossier pour l'image
+
+        await storageRef.putFile(_selectedImage!); // permet de créer un dossier pour l'image
+        final imageUrl = storageRef.getDownloadURL();
+        print(imageUrl);
       }
     } on FirebaseAuthException catch (error) {
       if (error.code == 'email-already-in-use') {
@@ -81,6 +91,11 @@ class _AuthScreenState extends State<AuthScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min, // permet de réduire la taille du formulaire
                         children: [
+                          if (!_isLogin) UserImagePicker(
+                            onPickImage: (pickedImage) {
+                              _selectedImage = pickedImage; // permet de créer une variable pour l'image
+                            },
+                          ),
                           TextFormField(
                             decoration: const InputDecoration(
                               labelText: 'Email',
