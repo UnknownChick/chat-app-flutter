@@ -8,10 +8,12 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authenticatedUser = FirebaseAuth.instance.currentUser!;
+
     return Scaffold( // permet de créer une page
       appBar: AppBar( // permet de créer une barre de navigation
-        title: const Text(
-          'FlutterChat'
+        title: Text(
+          'FlutterChat - ${authenticatedUser.email}'
         ),
         actions: [
           IconButton(
